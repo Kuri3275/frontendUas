@@ -1,0 +1,93 @@
+/* =========================
+   ADMIN LAYOUT
+========================= */
+.admin-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+  background: #f1f5f9;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+.admin-sidebar {
+  background: #0f172a;
+  color: #e5e7eb;
+  padding: 20px;
+}
+
+.admin-sidebar h3 {
+  margin-bottom: 20px;
+}
+
+.admin-sidebar a {
+  display: block;
+  color: #cbd5f5;
+  text-decoration: none;
+  margin-bottom: 12px;
+}
+
+.admin-sidebar a:hover {
+  color: white;
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
+.admin-main {
+  padding: 24px;
+}
+
+/* =========================
+   DASHBOARD STATS
+========================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  border-left: 5px solid #2563eb;
+}
+
+.stat-card h4 {
+  margin: 0;
+  color: #64748b;
+}
+
+.stat-card p {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 8px 0 0;
+}
+
+/* =========================
+   SEPARATOR
+========================= */
+.admin-separator {
+  margin: 32px 0;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* =========================
+   ACTIVITY LOG
+========================= */
+.activity-log {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.activity-log ul {
+  padding-left: 18px;
+}
+
+.activity-log li {
+  margin-bottom: 10px;
+  color: #334155;
+}

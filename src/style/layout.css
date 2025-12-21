@@ -7,6 +7,31 @@
   color: white;
 }
 
+.profile-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-login, .btn-logout {
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+
 .nav-menu {
   display: flex;
   list-style: none;
@@ -21,6 +46,82 @@
   display: flex;
   gap: 10px;
 }
+
+/* === PROFILE AVATAR === */
+.profile-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: #2563eb; /* biru modern */
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.avatar:hover {
+  background-color: #1e40af;
+}
+
+.avatar::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+
+/* === DROPDOWN PROFILE === */
+.dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  background-color: #fff;
+  border-radius: 8px;
+  min-width: 150px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 100;
+}
+
+.dropdown a,
+.dropdown button {
+  padding: 10px 14px;
+  text-align: left;
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  color: #111;
+}
+
+.dropdown a:hover,
+.dropdown button:hover {
+  background-color: #f3f4f6;
+}
+
+.dropdown button {
+  color: #dc2626; /* merah logout */
+}
+
 
 
 .card {
@@ -256,4 +357,19 @@
   margin-top: 24px;
 }
 
+
+.tryout-footer .secondary {
+  background: #e5e7eb;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}.tryout-footer .primary {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
