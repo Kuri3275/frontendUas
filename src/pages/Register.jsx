@@ -10,7 +10,7 @@ export default function Register() {
     name: "",
     email: "",
     password: "",
-    admin_code: ""
+    kode_admin: ""
   });
 
   const handleChange = (e) => {
@@ -27,7 +27,8 @@ export default function Register() {
       const res = await api.post("/register", {
         name: form.name,
         email: form.email,
-        password: form.password
+        password: form.password,
+        kode_admin: form.kode_admin
       });
 
       alert("Register berhasil");
@@ -70,9 +71,9 @@ export default function Register() {
 
         <input
           type="text"
-          name="admin_code"
+          name="kode_admin"
           placeholder="Kode Admin (opsional)"
-          value={form.admin_code}
+          value={form.kode_admin}
           onChange={handleChange}
         />
 
