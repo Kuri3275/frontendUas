@@ -1,5 +1,5 @@
-import Card from "../components/Card";
-import "../style/layout.css";
+import Card from "../../components/public/Card";
+import "../../style/layout.css";
 
 export default function Home() {
   return (

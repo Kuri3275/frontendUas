@@ -1,82 +1,57 @@
-import { Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Quiz from "./pages/Quiz";
-import Profile from "./pages/Profile";
+/* LAYOUTS */
+import PublicLayout from "./layouts/PublicLayout";
+import AdminLayout from "./layouts/AdminLayout";
 
-import AdminRoute from "./routes/AdminRoute";
+/* PUBLIC PAGES */
+import Home from "./pages/public/Home";
+import Login from "./pages/public/Login";
+import Register from "./pages/public/Register";
+import Quiz from "./pages/public/Quiz";
+import Profile from "./pages/public/Profile";
+
+/* ADMIN PAGES */
 import Dashboard from "./pages/admin/Dashboard";
-import KelolaKursus from "./pages/admin/KelolaKursus";
+import KelolaCourse from "./pages/admin/KelolaCourse";
 import KelolaMateri from "./pages/admin/KelolaMateri";
 import KelolaQuiz from "./pages/admin/KelolaQuiz";
-import KelolaKategori from "./pages/admin/KelolaKategori";
+import KelolaKategoriQuiz from "./pages/admin/KelolaKategoriQuiz";
+
+/* ROUTE GUARD */
+import AdminRoute from "./routes/AdminRoute";
 
 function App() {
   return (
-    <>
-      <Navbar />
+    <Routes>
 
-      <Routes>
-        {/* PUBLIC */}
+      {/* ===== PUBLIC LAYOUT ===== */}
+      <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/quiz" element={<Quiz />} />
         <Route path="/profile" element={<Profile />} />
+      </Route>
 
-        {/* ADMIN */}
-        <Route
-          path="/admin/dashboard"
-          element={
-            <AdminRoute>
-              <Dashboard />
-            </AdminRoute>
-          }
-        />
+      {/* ===== ADMIN LAYOUT ===== */}
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <AdminLayout />
+          </AdminRoute>
+        }
+      >
+        <Route index element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="courses" element={<KelolaCourse />} />
+        <Route path="materials" element={<KelolaMateri />} />
+        <Route path="quizzes" element={<KelolaQuiz />} />
+        <Route path="quiz-categories" element={<KelolaKategoriQuiz />} />
+      </Route>
 
-        <Route
-          path="/admin/courses"
-          element={
-            <AdminRoute>
-              <KelolaKursus />
-            </AdminRoute>
-          }
-        />
-
-        <Route
-          path="/admin/materials"
-          element={
-            <AdminRoute>
-              <KelolaMateri />
-            </AdminRoute>
-          }
-        />
-
-        <Route
-          path="/admin/quiz-categories"
-          element={
-            <AdminRoute>
-              <KelolaKategori />
-            </AdminRoute>
-          }
-        />
-
-        <Route
-          path="/admin/quizzes"
-          element={
-            <AdminRoute>
-              <KelolaQuiz />
-            </AdminRoute>
-          }
-        />
-      </Routes>
-
-      <Footer />
-    </>
+    </Routes>
   );
 }
 
