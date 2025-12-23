@@ -50,7 +50,7 @@ export default function Navbar() {
       </li>
       <li>
         <Link
-          to="/course"
+          to="/Quiz"
           className="hover:text-white transition relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-indigo-500 hover:after:w-full after:transition-all"
         >
           Quizz
