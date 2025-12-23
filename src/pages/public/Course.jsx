@@ -1,4 +1,4 @@
-import "../style/layout.css";
+
 
 export default function Quiz() {
   // Data kuis agar otomatis

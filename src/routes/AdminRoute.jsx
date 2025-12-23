@@ -1,6 +1,6 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-export default function AdminRoute({ children }) {
+export default function AdminRoute() {
   const userRaw = localStorage.getItem("user");
 
   if (!userRaw) {
@@ -13,5 +13,5 @@ export default function AdminRoute({ children }) {
     return <Navigate to="/" replace />;
   }
 
-  return children;
+  return <Outlet />;
 }
