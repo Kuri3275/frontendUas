@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @import "tailwindcss";
 
 html,
@@ -57,3 +58,15 @@ h1 {
     background-color: #f9f9f9;
   }
 }
+=======
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #f4f7fe;
+  color: #000;
+}
+
+#root {
+  width: 100%;
+}
+>>>>>>> cf86cd2d776024070b378b4d77dea026e74ac96e

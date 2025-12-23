@@ -1,0 +1,19 @@
+import Sidebar from "../components/admin/Sidebar";
+import Topbar from "../components/admin/Topbar";
+import { Outlet } from "react-router-dom";
+import "../style/admin.css";
+
+export default function AdminLayout() {
+  return (
+    <div className="admin-layout">
+      <Sidebar />
+
+      <div className="admin-main">
+        <Topbar />
+        <main className="admin-content">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}

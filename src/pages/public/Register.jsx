@@ -1,7 +1,7 @@
-import "../style/layout.css";
+import "../../style/layout.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import api from "../api/axios";
+import api from "../../api/axios";
 
 export default function Register() {
   const navigate = useNavigate();

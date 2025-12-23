@@ -1,4 +1,9 @@
+<<<<<<< HEAD:src/pages/Home.jsx
 import Card from "../components/Card";
+=======
+import Card from "../../components/public/Card";
+import "../../style/layout.css";
+>>>>>>> cf86cd2d776024070b378b4d77dea026e74ac96e:src/pages/public/Home.jsx
 
 export default function Home() {
   return (

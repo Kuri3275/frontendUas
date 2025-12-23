@@ -1,3 +1,8 @@
+<<<<<<< HEAD:src/components/Card.jsx
+=======
+import "../../style/layout.css";
+
+>>>>>>> cf86cd2d776024070b378b4d77dea026e74ac96e:src/components/public/Card.jsx
 export default function Card({ title, desc }) {
   return (
     <div className="bg-gray-900 rounded-2xl p-8 shadow-lg hover:shadow-indigo-500/20 hover:-translate-y-2 transition">
