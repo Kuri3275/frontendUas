@@ -1,42 +1,149 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* NAVBAR STYLING - UKURAN DIBESARKAN */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 90px; /* Ukuran lebih besar agar menonjol */
+  background-color: #1a1a2e;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 60px;
+  z-index: 1000;
+  color: white;
+  box-sizing: border-box;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.navbar .logo {
+  font-size: 26px; /* Font logo besar */
+  font-weight: bold;
+  letter-spacing: 1px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.link {
+  color: #a0aec0;
+  text-decoration: none;
+  margin: 0 20px;
+  font-size: 18px;
+  transition: color 0.3s;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.active-link {
+  color: #9f7aea !important;
+  font-weight: bold;
+  border-bottom: 3px solid #9f7aea;
+  padding-bottom: 8px;
+  margin: 0 20px;
+  text-decoration: none;
+  font-size: 18px;
 }
 
-.card {
-  padding: 2em;
+/* CONTAINER UTAMA */
+/* CONTAINER - Disesuaikan agar Footer tidak terlalu jauh */
+.container-quiz {
+  background-color: #f4f7fe;
+  /* Hapus min-height: 100vh agar tidak memaksa halaman jadi panjang */
+  padding: 140px 50px 80px 50px; /* Jarak bawah 80px agar ada napas sebelum footer */
+  display: flex;
+  flex-direction: column;
 }
 
-.read-the-docs {
-  color: #888;
+/* NAVBAR BESAR */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 90px;
+  background-color: #1a1a2e;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 60px;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+/* GRID & CARD LANDSCAPE TETAP SAMA */
+.quiz-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 25px;
+  width: 100%;
+}
+.container-quiz {
+  background-color: #f4f7fe;
+  min-height: 100vh;
+  padding: 140px 50px 50px 50px; /* Ditambah agar tidak tertutup navbar tinggi */
+  display: flex;
+  flex-direction: column;
+}
+
+/* GRID KUIS - MEMBUAT SEJAJAR 3 DAN LEBAR */
+.quiz-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 Kolom sejajar */
+  gap: 25px;
+  width: 100%;
+}
+
+/* KARTU KUIS - BENTUK LANDSCAPE */
+.card-kuis {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px; /* Mengunci tinggi agar terlihat lebar ke samping */
+  transition: transform 0.3s ease;
+}
+
+.card-kuis:hover {
+  transform: translateY(-5px);
+}
+
+/* WARNA BORDER ATAS */
+.border-html { border-top: 6px solid #3b82f6; }
+.border-css { border-top: 6px solid #10b981; }
+.border-js { border-top: 6px solid #8b5cf6; }
+
+/* TOMBOL MENGISI LEBAR KARTU */
+.btn-mulai {
+  background-color: #4e44e7;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.btn-mulai:hover {
+  background-color: #3b34b8;
+}
+
+/* SEARCH & PROFILE DI NAVBAR */
+.search-input {
+  padding: 10px 18px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  margin-right: 20px;
+  width: 250px;
+}
+
+.btn-profil {
+  background: #9f7aea;
+  border: none;
+  color: white;
+  padding: 10px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
 }
