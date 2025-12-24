@@ -278,5 +278,36 @@
 .stat-card.purple .stat-icon {
   background: linear-gradient(135deg, #7c3aed, #4c1d95);
 }
+ 
 
+/* kelola course */
+/* ===== PAGINATION ===== */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
 
+.pagination button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-weight: 500;
+  color: #334155;
+}
+
+/* kelola course */

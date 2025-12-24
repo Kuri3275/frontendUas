@@ -4,15 +4,20 @@ import PublicLayout from "./layouts/PublicLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import AuthLayout from "./layouts/AuthLayout";
 
-import Home from "./pages/public/Home";
-import Course from "./pages/public/Course";
-import Profile from "./pages/public/Profile";
-import Quiz from "./pages/public/Quiz";
 import Login from "./pages/public/Login";
 import Register from "./pages/public/Register";
+import Home from "./pages/public/Home";
+import Profile from "./pages/public/Profile";
+import Course from "./pages/public/Course";
+import Materi from "./pages/public/Materi";
+import Quiz from "./pages/public/Quiz";
 
-import Dashboard from "./pages/admin/Dashboard";
 import AdminRoute from "./routes/AdminRoute";
+import Dashboard from "./pages/admin/Dashboard";
+import KelolaCourse from "./pages/admin/KelolaCourse";
+import KelolaMateri from "./pages/admin/KelolaMateri";
+import KelolaKategoriQuiz from "./pages/admin/KelolaKategoriQuiz";
+import KelolaQuiz from "./pages/admin/KelolaQuiz";
 
 function App() {
   return (
@@ -28,16 +33,22 @@ function App() {
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/course" element={<Course />} />
+        <Route path="/materi" element={<Materi />} />
         <Route path="/quiz" element={<Quiz />} />
         <Route path="/profile" element={<Profile />} />
       </Route>
 
       {/* ===== ADMIN ===== */}
       <Route element={<AdminRoute />}>
-        <Route element={<AdminLayout />}>
-          <Route path="/admin" element={<Dashboard />} />
-        </Route>
+      <Route element={<AdminLayout />}>
+        <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/courses" element={<KelolaCourse />} />
+        <Route path="/admin/materials" element={<KelolaMateri />} />
+        <Route path="/admin/quiz-categories" element={<KelolaKategoriQuiz />} />
+        <Route path="/admin/quizzes" element={<KelolaQuiz />} />
       </Route>
+    </Route>
+
 
     </Routes>
   );

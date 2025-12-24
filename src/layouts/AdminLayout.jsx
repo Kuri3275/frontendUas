@@ -1,17 +1,22 @@
+import { Outlet } from "react-router-dom";
 import Sidebar from "../components/admin/Sidebar";
 import Topbar from "../components/admin/Topbar";
-import { Outlet } from "react-router-dom";
-import "../style/admin.css";
 
 export default function AdminLayout() {
   return (
-    <div className="admin-layout">
+    <div className="min-h-screen bg-gray-100">
+      {/* Sidebar */}
       <Sidebar />
 
-      <div className="admin-main">
+      {/* Main area */}
+      <div className="ml-64 flex min-h-screen flex-col">
         <Topbar />
-        <main className="admin-content">
-          <Outlet />
+
+        {/* Content */}
+        <main className="flex-1 px-6 py-8">
+          <div className="mx-auto max-w-7xl">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

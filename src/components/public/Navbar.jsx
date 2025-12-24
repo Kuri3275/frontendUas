@@ -34,7 +34,7 @@ export default function Navbar() {
       </li>
       <li>
         <Link
-          to="/quiz"
+          to="/Course"
           className="hover:text-white transition relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-indigo-500 hover:after:w-full after:transition-all"
         >
           Course
@@ -42,7 +42,7 @@ export default function Navbar() {
       </li>
       <li>
         <Link
-          to="/course"
+          to="/Materi"
           className="hover:text-white transition relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-indigo-500 hover:after:w-full after:transition-all"
         >
           Materi
@@ -63,13 +63,13 @@ export default function Navbar() {
       {!user && (
         <>
           <Link to="/login">
-            <button className="px-5 py-2 rounded-lg text-indigo-300 hover:text-white hover:bg-indigo">
+            <button className="px-5 py-2 rounded-lg text-black-300 hover:text-black hover:bg-white/10 transition cursor-pointer">
               Login
             </button>
           </Link>
 
           <Link to="/register">
-            <button className="px-5 py-2 rounded-lg text-indigo-300 hover:text-black hover:bg-white/10 transition">
+            <button className="px-5 py-2 rounded-lg text-indigo-300 hover:text-black hover:bg-white/10 transition cursor-pointer">
               Register
             </button>
           </Link>
@@ -80,7 +80,7 @@ export default function Navbar() {
         <div className="relative flex items-center gap-4">
 
           {user.role === "admin" && (
-            <Link to="/admin">
+            <Link to="/admin/dashboard">
               <button className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 transition text-sm font-semibold">
                 Admin Panel
               </button>
