@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { Plus, Pencil, Trash2, X, Save } from "lucide-react";
 import api from "../../api/axios";
 
@@ -12,6 +13,7 @@ export default function KelolaCourse() {
     title: "",
     category: "",
     description: "",
+    thumbnail: null,
   });
 
   const [editingId, setEditingId] = useState(null);
@@ -34,30 +36,47 @@ export default function KelolaCourse() {
   }, [currentPage]);
 
   const submitForm = async () => {
-    console.log("FORM SAAT SUBMIT:", form);
+  if (!form.title || !form.category) {
+    toast.error("Judul dan kategori wajib diisi");
+    return;
+  }
 
-    if (!form.title || !form.category) {
-      alert("Judul & kategori wajib diisi");
-      return;
+  const loadingToast = toast.loading(
+    editingId ? "Menyimpan perubahan..." : "Membuat course..."
+  );
+
+  try {
+    const formData = new FormData();
+    formData.append("title", form.title);
+    formData.append("category", form.category);
+    formData.append("description", form.description);
+
+    if (form.thumbnail) {
+      formData.append("thumbnail", form.thumbnail);
     }
 
-    try {
-      if (editingId) {
-        await api.put(`/admin/courses/${editingId}`, form);
-      } else {
-        await api.post("/admin/courses", form);
-      }
-
-      resetForm();
-      fetchCourses(currentPage);
-    } catch (err) {
-      console.error(err.response?.data);
-      alert(err.response?.data?.message || "Gagal menyimpan data");
+    if (editingId) {
+      await api.post(`/admin/courses/${editingId}?_method=PUT`, formData);
+      toast.success("Course berhasil diperbarui", { id: loadingToast });
+    } else {
+      await api.post("/admin/courses", formData);
+      toast.success("Course berhasil dibuat", { id: loadingToast });
     }
-  };
+
+    resetForm();
+    fetchCourses(currentPage);
+  } catch (err) {
+    toast.error(
+      err.response?.data?.message || "Gagal menyimpan course",
+      { id: loadingToast }
+    );
+  }
+};
+
+
 
   const resetForm = () => {
-    setForm({ title: "", category: "", description: "" });
+    setForm({ title: "", category: "", description: "", thumbnail: null });
     setEditingId(null);
     setShowForm(false);
   };
@@ -67,31 +86,67 @@ export default function KelolaCourse() {
       title: course.title,
       category: course.category,
       description: course.description,
+      thumbnail: null,
     });
     setEditingId(course.id);
     setShowForm(true);
   };
 
-  const deleteCourse = async (id) => {
-    if (!confirm("Hapus course ini?")) return;
-    await api.delete(`/admin/courses/${id}`);
-    fetchCourses();
-  };
+      const deleteCourse = async (id) => {
+      if (!confirm("Hapus course ini?")) return;
+
+      const loadingToast = toast.loading("Menghapus course...");
+
+      try {
+        await api.delete(`/admin/courses/${id}`);
+        toast.success("Course berhasil dihapus", { id: loadingToast });
+        fetchCourses(currentPage);
+      } catch (err) {
+        toast.error("Gagal menghapus course", { id: loadingToast });
+      }
+    };
+
 
   return (
     <div className="p-6 space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b">
-        <h2 className="text-2xl font-semibold text-gray-800">Kelola Course</h2>
+     {/* Header Section */}
+      <div className="relative overflow-hidden rounded-2xl bg-white p-6 shadow-sm border border-gray-200">
+        {/* Accent background */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-50 via-transparent to-transparent pointer-events-none" />
 
-        <button
-          onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-black hover:bg-blue-700"
-        >
-          <Plus size={18} />
-          Tambah Course
-        </button>
+        <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          {/* Title */}
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+              Kelola Course
+            </h2>
+            <p className="mt-1 text-sm text-gray-500">
+              Tambah, ubah, dan kelola seluruh course e-learning Anda
+            </p>
+          </div>
+
+          {/* Action Button */}
+          <button
+            onClick={() => setShowForm(true)}
+            className="
+              group inline-flex items-center gap-2
+              rounded-xl bg-blue-600 px-6 py-3
+              text-sm font-semibold text-black
+              shadow-md shadow-blue-600/20
+              transition-all duration-300
+              hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30
+              active:scale-95
+            "
+          >
+            <Plus
+              size={18}
+              className="transition-transform duration-300 group-hover:rotate-90"
+            />
+            Tambah Course
+          </button>
+        </div>
       </div>
+
 
       {/* Table */}
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -99,7 +154,10 @@ export default function KelolaCourse() {
           <thead className="bg-gray-50 text-gray-600">
             <tr>
               <th className="px-6 py-4 text-left font-medium">Judul</th>
+              <th className="px-6 py-4 text-left font-medium">Category</th>
               <th className="px-6 py-4 text-left font-medium">Deskripsi</th>
+              <th className="px-6 py-4 text-left font-medium">Thumbnail</th>
+              <th className="px-6 py-4 text-left font-medium">Dibuat oleh</th>
               <th className="px-6 py-4 text-center w-36 font-medium">Aksi</th>
             </tr>
           </thead>
@@ -121,7 +179,25 @@ export default function KelolaCourse() {
                   {course.title}
                 </td>
                 <td className="px-6 py-4 text-gray-600 leading-relaxed">
+                  {course.category}
+                </td>
+                <td className="px-6 py-4 text-gray-600 leading-relaxed">
                   {course.description}
+                </td>
+                <td className="px-6 py-4">
+                    {course.thumbnail_url ? (
+                    <img
+                      src={course.thumbnail_url}
+                      alt="Thumbnail"
+                      className="h-16 w-16 object-cover rounded-md"
+                      onError={(e) => e.target.style.display = "none"}
+                    />
+                  ) : (
+                    <span className="text-gray-400 text-sm">No Image</span>
+                  )}
+                </td>
+                <td className="px-6 py-4 text-gray-600 leading-relaxed">
+                  {course.creator?.name || "-"}
                 </td>
                 <td className="px-6 py-4">
                   <button
@@ -210,6 +286,15 @@ export default function KelolaCourse() {
                   setForm({ ...form, description: e.target.value })
                 }
                 className="w-full rounded-lg border px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              />
+
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) =>
+                  setForm({ ...form, thumbnail: e.target.files[0] })
+                }
+                className="w-full rounded-lg border px-3 py-2 text-sm"
               />
             </div>
 
