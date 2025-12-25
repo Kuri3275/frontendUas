@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import PublicLayout from "./layouts/PublicLayout";
 import AdminLayout from "./layouts/AdminLayout";
@@ -21,6 +22,8 @@ import KelolaQuiz from "./pages/admin/KelolaQuiz";
 
 function App() {
   return (
+    <>
+    <Toaster position="top-right" />
     <Routes>
 
       {/* ===== AUTH (TANPA NAVBAR) ===== */}
@@ -51,6 +54,7 @@ function App() {
 
 
     </Routes>
+    </>
   );
 }
 

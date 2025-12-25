@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
+import toast from "react-hot-toast";
 import {
   Bell,
   ChevronDown,
@@ -18,10 +19,13 @@ export default function Topbar() {
   const user = JSON.parse(localStorage.getItem("user"));
   const pageTitle = getPageTitle(location.pathname);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/login");
-  };
+ const handleLogout = () => {
+  toast.success("Logout berhasil");
+  localStorage.clear();
+  setTimeout(() => navigate("/login"), 800);
+};
+
+
 
   // close dropdown if click outside
   useEffect(() => {
@@ -35,7 +39,13 @@ export default function Topbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-white border-b">
+            <header className="
+          sticky top-0 z-30 h-16
+          bg-white/80 backdrop-blur-xl
+          border-b border-gray-200
+          shadow-sm
+        ">
+
       <div className="flex h-full items-center justify-between px-6 ml-64">
 
         {/* PAGE TITLE */}
