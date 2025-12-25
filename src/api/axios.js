@@ -4,8 +4,10 @@ const api = axios.create({
   baseURL: "http://localhost:8000/api",
   headers: {
     Accept: "application/json",
-  },  withCredentials: false // 🔥 PENTING
+  },
+  withCredentials: false,
 });
+
 
 api.interceptors.request.use(
   (config) => {

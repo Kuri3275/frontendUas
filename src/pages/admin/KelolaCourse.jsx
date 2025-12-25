@@ -8,7 +8,12 @@ export default function KelolaCourse() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ title: "", description: "" });
+  const [form, setForm] = useState({
+    title: "",
+    category: "",
+    description: "",
+  });
+
   const [editingId, setEditingId] = useState(null);
 
   const fetchCourses = async (page = 1) => {
@@ -29,21 +34,30 @@ export default function KelolaCourse() {
   }, [currentPage]);
 
   const submitForm = async () => {
+    console.log("FORM SAAT SUBMIT:", form);
+
+    if (!form.title || !form.category) {
+      alert("Judul & kategori wajib diisi");
+      return;
+    }
+
     try {
       if (editingId) {
         await api.put(`/admin/courses/${editingId}`, form);
       } else {
         await api.post("/admin/courses", form);
       }
+
       resetForm();
-      fetchCourses();
-    } catch {
-      alert("Gagal menyimpan data");
+      fetchCourses(currentPage);
+    } catch (err) {
+      console.error(err.response?.data);
+      alert(err.response?.data?.message || "Gagal menyimpan data");
     }
   };
 
   const resetForm = () => {
-    setForm({ title: "", description: "" });
+    setForm({ title: "", category: "", description: "" });
     setEditingId(null);
     setShowForm(false);
   };
@@ -51,6 +65,7 @@ export default function KelolaCourse() {
   const editCourse = (course) => {
     setForm({
       title: course.title,
+      category: course.category,
       description: course.description,
     });
     setEditingId(course.id);
@@ -67,9 +82,7 @@ export default function KelolaCourse() {
     <div className="p-6 space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between pb-4 border-b">
-        <h2 className="text-2xl font-semibold text-gray-800">
-          Kelola Course
-        </h2>
+        <h2 className="text-2xl font-semibold text-gray-800">Kelola Course</h2>
 
         <button
           onClick={() => setShowForm(true)}
@@ -80,83 +93,83 @@ export default function KelolaCourse() {
         </button>
       </div>
 
-
       {/* Table */}
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-  <table className="w-full text-sm">
-    <thead className="bg-gray-50 text-gray-600">
-      <tr>
-        <th className="px-6 py-4 text-left font-medium">Judul</th>
-        <th className="px-6 py-4 text-left font-medium">Deskripsi</th>
-        <th className="px-6 py-4 text-center w-36 font-medium">Aksi</th>
-      </tr>
-    </thead>
+        <table className="w-full text-sm">
+          <thead className="bg-gray-50 text-gray-600">
+            <tr>
+              <th className="px-6 py-4 text-left font-medium">Judul</th>
+              <th className="px-6 py-4 text-left font-medium">Deskripsi</th>
+              <th className="px-6 py-4 text-center w-36 font-medium">Aksi</th>
+            </tr>
+          </thead>
 
-    <tbody className="divide-y divide-gray-100">
-      {courses.length === 0 ? (
-    <tr>
-      <td colSpan={3} className="px-6 py-10 text-center text-gray-500">
-        {loading ? "Memuat data..." : "Tidak ada data course."}
-      </td>
-    </tr>
-  ) : (null)} 
-      {courses.map(course => (
-        <tr key={course.id} className="hover:bg-gray-50">
-          <td className="px-6 py-4 font-medium text-gray-800">
-            {course.title}
-          </td>
-          <td className="px-6 py-4 text-gray-600 leading-relaxed">
-            {course.description}
-          </td>
-          <td className="px-6 py-4">
-            <button
-              onClick={() => editCourse(course)}
-              className="rounded-lg p-2 text-sky-600 hover:bg-sky-100"
-            >
-              <Pencil size={18} />
-            </button>
+          <tbody className="divide-y divide-gray-100">
+            {courses.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={3}
+                  className="px-6 py-10 text-center text-gray-500"
+                >
+                  {loading ? "Memuat data..." : "Tidak ada data course."}
+                </td>
+              </tr>
+            ) : null}
+            {courses.map((course) => (
+              <tr key={course.id} className="hover:bg-gray-50">
+                <td className="px-6 py-4 font-medium text-gray-800">
+                  {course.title}
+                </td>
+                <td className="px-6 py-4 text-gray-600 leading-relaxed">
+                  {course.description}
+                </td>
+                <td className="px-6 py-4">
+                  <button
+                    onClick={() => editCourse(course)}
+                    className="rounded-lg p-2 text-sky-600 hover:bg-sky-100"
+                  >
+                    <Pencil size={18} />
+                  </button>
 
-            <button
-              onClick={() => deleteCourse(course.id)}
-              className="rounded-lg p-2 text-red-600 hover:bg-red-100"
-            >
-              <Trash2 size={18} />
-            </button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
-
-
+                  <button
+                    onClick={() => deleteCourse(course.id)}
+                    className="rounded-lg p-2 text-red-600 hover:bg-red-100"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Pagination */}
       {meta?.last_page && (
-          <div className="flex items-center justify-between pt-6">
-            <span className="text-sm text-gray-600">
-              Page {meta.current_page} of {meta.last_page}
-            </span>
+        <div className="flex items-center justify-between pt-6">
+          <span className="text-sm text-gray-600">
+            Page {meta.current_page} of {meta.last_page}
+          </span>
 
-            <div className="flex gap-3">
-              <button
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(p => p - 1)}
-                className="rounded-lg border px-4 py-2 text-sm disabled:opacity-40 hover:bg-gray-100"
-              >
-                Prev
-              </button>
+          <div className="flex gap-3">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((p) => p - 1)}
+              className="rounded-lg border px-4 py-2 text-sm disabled:opacity-40 hover:bg-gray-100"
+            >
+              Prev
+            </button>
 
-              <button
-                disabled={currentPage === meta.last_page}
-                onClick={() => setCurrentPage(p => p + 1)}
-                className="rounded-lg border px-4 py-2 text-sm disabled:opacity-40 hover:bg-gray-100"
-              >
-                Next
-              </button>
-            </div>
+            <button
+              disabled={currentPage === meta.last_page}
+              onClick={() => setCurrentPage((p) => p + 1)}
+              className="rounded-lg border px-4 py-2 text-sm disabled:opacity-40 hover:bg-gray-100"
+            >
+              Next
+            </button>
           </div>
-        )}
+        </div>
+      )}
 
       {/* Modal */}
       {showForm && (
@@ -166,18 +179,26 @@ export default function KelolaCourse() {
               <h3 className="text-lg font-semibold">
                 {editingId ? "Edit Course" : "Tambah Course"}
               </h3>
-              <button onClick={resetForm}className="rounded-md p-1 hover:bg-gray-100">
+              <button
+                onClick={resetForm}
+                className="rounded-md p-1 hover:bg-gray-100"
+              >
                 <X size={18} />
               </button>
             </div>
             <div className="space-y-4">
               <input
                 type="text"
-                placeholder="Judul Course"
+                placeholder="Judul course"
                 value={form.title}
-                onChange={(e) =>
-                  setForm({ ...form, title: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                className="w-full rounded-lg border px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              />
+              <input
+                type="text"
+                placeholder="Kategori Course"
+                value={form.category}
+                onChange={(e) => setForm({ ...form, category: e.target.value })}
                 className="w-full rounded-lg border px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
 
@@ -214,4 +235,3 @@ export default function KelolaCourse() {
     </div>
   );
 }
-
