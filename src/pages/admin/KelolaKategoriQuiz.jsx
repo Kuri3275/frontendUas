@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
+import { Plus, Pencil, Trash2, X, Save } from "lucide-react";
 
 export default function KelolaKategori() {
   const [categories, setCategories] = useState([]);
@@ -43,24 +44,45 @@ export default function KelolaKategori() {
   };
 
   return (
-    <div className="admin-page">
-      <h2>Kelola Quiz Category</h2>
+    <div className="admin-page max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
+      <h2 className="text-2xl font-semibold mb-6 text-gray-800">
+        Kelola Quiz Category
+      </h2>
 
-      <input
-        type="text"
-        placeholder="Nama Kategori"
-        value={newCategory}
-        onChange={(e) => setNewCategory(e.target.value)}
-      />
-      <button onClick={handleAdd} disabled={loading}>
-        {loading ? "Menambahkan..." : "Tambah Kategori"}
-      </button>
+      <div className="flex gap-3 mb-6">
+        <input
+          type="text"
+          placeholder="Nama Kategori"
+          value={newCategory}
+          onChange={(e) => setNewCategory(e.target.value)}
+          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+        <button
+          onClick={handleAdd}
+          disabled={loading}
+          className={`px-4 py-2 rounded-lg font-semibold text-blue-300 ${
+            loading
+              ? "bg-white-400 cursor-not-allowed"
+              : "bg-blue-600 text-white hover:bg-indigo-700"
+          } transition`}
+        >
+          {loading ? "Menambahkan..." : "Tambah Kategori"}
+        </button>
+      </div>
 
-      <ul>
+      <ul className="space-y-2">
         {categories.map((cat) => (
-          <li key={cat.id}>
-            {cat.name}{" "}
-            <button onClick={() => handleDelete(cat.id)}>Hapus</button>
+          <li
+            key={cat.id}
+            className="flex justify-between items-center bg-gray-50 px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition"
+          >
+            <span className="text-blue-700">{cat.name}</span>
+            <button
+              onClick={() => handleDelete(cat.id)}
+              className="text-red-600 hover:text-red-800 font-medium"
+            >
+              <Trash2 size={16} />
+            </button>
           </li>
         ))}
       </ul>
