@@ -19,6 +19,7 @@ import KelolaCourse from "./pages/admin/KelolaCourse";
 import KelolaMateri from "./pages/admin/KelolaMateri";
 import KelolaKategoriQuiz from "./pages/admin/KelolaKategoriQuiz";
 import KelolaQuiz from "./pages/admin/KelolaQuiz";
+import QuizQuestionsModal from "./pages/admin/QuizQuestionsModal";
 
 function App() {
   return (

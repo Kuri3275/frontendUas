@@ -1,14 +1,22 @@
 import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, X, Save } from "lucide-react";
 import api from "../../api/axios";
+import toast from "react-hot-toast";
+import QuizQuestionsModal from "./QuizQuestionsModal";
 
 export default function KelolaQuiz() {
   const [quizzes, setQuizzes] = useState([]);
   const [courses, setCourses] = useState([]);
   const [categories, setCategories] = useState([]);
+
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
+  const [activeQuiz, setActiveQuiz] = useState(null);
+  const [showQuestionModal, setShowQuestionModal] = useState(false);
+
+  
+  
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -17,8 +25,9 @@ export default function KelolaQuiz() {
     time_limit_minutes: "",
   });
 
+  
   /* ================= FETCH DATA ================= */
-
+  
   const fetchQuiz = async () => {
     const res = await api.get("/admin/quiz");
     setQuizzes(res.data.data.data);
@@ -28,20 +37,20 @@ export default function KelolaQuiz() {
     const res = await api.get("/admin/courses");
     setCourses(res.data.data.data);
   };
-
+  
   const fetchCategories = async () => {
     const res = await api.get("/admin/quiz-categories");
     setCategories(res.data.data);
   };
-
+  
   useEffect(() => {
     fetchQuiz();
     fetchCourses();
     fetchCategories();
   }, []);
-
+  
   /* ================= SUBMIT ================= */
-
+  
   const submitForm = async () => {
     console.log("SUBMIT FORM:", form);
 
@@ -90,12 +99,20 @@ export default function KelolaQuiz() {
     setEditingId(quiz.id);
     setShowForm(true);
   };
-
+  
   const deleteQuiz = async (id) => {
     if (!confirm("Hapus quiz ini?")) return;
     await api.delete(`/admin/quiz/${id}`);
     fetchQuiz();
   };
+
+  const openKelolaSoal = (quiz) => {
+  setActiveQuiz(quiz);
+  setShowQuestionModal(true);
+};
+
+  
+
 
   /* ================= UI ================= */
 
@@ -113,17 +130,45 @@ export default function KelolaQuiz() {
 
       {/* TABLE */}
       <table className="w-full border bg-white rounded-lg">
-        <thead className="bg-gray-100">
+        <thead className="bg-gray-100 text-sm">
           <tr>
             <th className="p-3 text-left">Judul</th>
-            <th className="p-3">Aksi</th>
+            <th className="p-3 text-left">Course</th>
+            <th className="p-3 text-left">Kategori</th>
+            <th className="p-3 text-center">Soal</th>
+            <th className="p-3 text-center">Waktu</th>
+            <th className="p-3 text-center">Aksi</th>
           </tr>
         </thead>
+
         <tbody>
           {quizzes.map((q) => (
-            <tr key={q.id} className="border-t">
-              <td className="p-3">{q.title}</td>
-              <td className="p-3 flex gap-2 justify-center">
+            <tr key={q.id} className="border-t text-sm">
+              <td className="p-3 font-medium">{q.title}</td>
+
+              <td className="p-3 text-gray-700">
+                {q.course?.title || "-"}
+              </td>
+
+              <td className="p-3 text-gray-700">
+                {q.category?.name || "-"}
+              </td>
+
+              <td className="p-3 text-center">
+                <button
+                  onClick={() => openKelolaSoal(q)}
+                  className="text-purple-600 hover:underline"
+                >
+                  Kelola Soal
+                </button>
+              </td>
+              <td className="p-3 text-center">
+                {q.time_limit_minutes
+                  ? `${q.time_limit_minutes} menit`
+                  : "-"}
+              </td>
+
+              <td className="p-3 flex gap-3 justify-center">
                 <button onClick={() => editQuiz(q)}>
                   <Pencil size={16} />
                 </button>
@@ -219,6 +264,20 @@ export default function KelolaQuiz() {
           </div>
         </div>
       )}
+
+      {/* QUIZ QUESTIONS MODAL */}
+      {showQuestionModal && activeQuiz && (
+        <QuizQuestionsModal
+          quiz={activeQuiz}
+          onClose={() => {
+            setShowQuestionModal(false);
+            setActiveQuiz(null);
+          }}
+        />
+      )}
+
+
+
     </div>
   );
 }
