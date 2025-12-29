@@ -1,6 +1,6 @@
 import Card from "../../components/public/Card";
 import { BookOpen, Users, Rocket } from "lucide-react";
-import GambarSiswa from "../../gambar/contoh_1.png";
+import GambarSiswa from "../../gambar/student3nobg.png";
 import { Link } from "react-router-dom";
 
 
@@ -40,7 +40,7 @@ export default function Home() {
 
           {/* RIGHT (IMAGE / MOCK) */}
           <div className="relative hidden md:block">
-            <div className="w-full h-[420px] bg-white/10 rounded-3xl backdrop-blur-sm flex items-center justify-center">
+            <div className="w-full h-[500px] bg-white/10 rounded-3xl backdrop-blur-sm flex items-center justify-center">
               <img
                 src={GambarSiswa}
                 alt="Contoh"
