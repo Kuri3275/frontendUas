@@ -12,6 +12,7 @@ import Profile from "./pages/public/Profile";
 import Course from "./pages/public/Course";
 import Materi from "./pages/public/Materi";
 import Quiz from "./pages/public/Quiz";
+import About from "./pages/public/About";
 
 import AdminRoute from "./routes/AdminRoute";
 import Dashboard from "./pages/admin/Dashboard";
@@ -39,6 +40,7 @@ function App() {
         <Route path="/materi" element={<Materi />} />
         <Route path="/quiz" element={<Quiz />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/about" element={<About />} />
       </Route>
 
       {/* ===== ADMIN ===== */}
