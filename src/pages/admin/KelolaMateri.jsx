@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, X, Save } from "lucide-react";
 import toast from "react-hot-toast";
-import api from "../../api/axios";
+import materialService from "../../api/admin/materi.service";
+import courseService from "../../api/admin/course.service";
 
 export default function KelolaMateri() {
   const [materials, setMaterials] = useState([]);
@@ -26,7 +27,7 @@ export default function KelolaMateri() {
   /* ================= FETCH ================= */
   const fetchMaterials = async () => {
     try {
-      const res = await api.get("/admin/materials");
+      const res = await materialService.getMateri();
       setMaterials(res.data.data);
     } catch {
       toast.error("Gagal memuat data materi");
@@ -34,13 +35,15 @@ export default function KelolaMateri() {
   };
 
   const fetchCourses = async () => {
-    try {
-      const res = await api.get("/admin/courses/select");
-      setCourses(res.data.data);
-    } catch {
-      toast.error("Gagal memuat course");
-    }
-  };
+  try {
+    const data = await courseService.getSelect();
+    setCourses(data);
+  } catch (error) {
+    console.error("FETCH ERROR:", error);
+    toast.error("Gagal memuat course");
+  }
+};
+
 
   useEffect(() => {
     fetchMaterials();
@@ -74,10 +77,10 @@ export default function KelolaMateri() {
     setLoading(true);
     try {
       if (editingId) {
-        await api.post(`/admin/materials/${editingId}?_method=PUT`, fd);
+        await materialService.update(editingId, fd);
         toast.success("Materi berhasil diperbarui");
       } else {
-        await api.post("/admin/materials", fd);
+        await materialService.create(fd);
         toast.success("Materi berhasil ditambahkan");
       }
 
@@ -106,7 +109,7 @@ export default function KelolaMateri() {
     if (!confirm("Hapus materi ini?")) return;
 
     try {
-      await api.delete(`/admin/materials/${id}`);
+      await materialService.delete(id);
       toast.success("Materi berhasil dihapus");
       fetchMaterials();
     } catch {

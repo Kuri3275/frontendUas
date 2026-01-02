@@ -3,8 +3,7 @@ import toast from "react-hot-toast";
 import { Plus, Pencil, Trash2, X, Save } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import autoAnimate from "@formkit/auto-animate";
-import api from "../../api/axios";
-
+import  courseService from "../../api/admin/course.service";
 export default function KelolaCourse() {
   const [courses, setCourses] = useState([]);
   const [meta, setMeta] = useState({});
@@ -29,7 +28,7 @@ export default function KelolaCourse() {
   const fetchCourses = async (page = 1) => {
     try {
       setLoading(true);
-      const res = await api.get(`/admin/courses?page=${page}`);
+      const res = await courseService.getCourses({ page });
       setCourses(res.data.data.data);
       setMeta(res.data.data);
     } catch (err) {
@@ -61,10 +60,10 @@ export default function KelolaCourse() {
       if (form.thumbnail) formData.append("thumbnail", form.thumbnail);
 
       if (editingId) {
-        await api.post(`/admin/courses/${editingId}?_method=PUT`, formData);
+        await courseService.update(editingId, formData);
         toast.success("Course berhasil diperbarui", { id: loadingToast });
       } else {
-        await api.post("/admin/courses", formData);
+        await courseService.create(formData);
         toast.success("Course berhasil dibuat", { id: loadingToast });
       }
 
@@ -101,7 +100,7 @@ export default function KelolaCourse() {
     const loadingToast = toast.loading("Menghapus course...");
 
     try {
-      await api.delete(`/admin/courses/${id}`);
+      await courseService.delete(id);
       toast.success("Course berhasil dihapus", { id: loadingToast });
       fetchCourses(currentPage);
     } catch (err) {
