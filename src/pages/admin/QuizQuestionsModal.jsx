@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, X, Save } from "lucide-react";
 import toast from "react-hot-toast";
-import quizQuestionService from "../../api/quizQuestion.service";
+import quizQuestionService from "../../api/admin/quizQuestion.service";
 
 export default function QuizQuestionsModal({ quiz, onClose }) {
   const [questions, setQuestions] = useState([]);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Plus, Pencil, Trash2, X, Save } from "lucide-react";
-import quizCategoryService from "../../api/quizCategory.service";
+import quizCategoryService from "../../api/admin/quizCategory.service";
 
 export default function KelolaKategoriQuiz() {
   const [categories, setCategories] = useState([]);
@@ -17,7 +17,7 @@ export default function KelolaKategoriQuiz() {
   /* ================= FETCH ================= */
   const fetchCategories = async () => {
     try {
-      const res = await quizCategoryService.getAll();
+      const res = await quizCategoryService.getQuizCategories();
       setCategories(res.data.data);
     } catch {
       toast.error("Gagal mengambil data kategori");

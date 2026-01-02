@@ -21,6 +21,8 @@ import KelolaMateri from "./pages/admin/KelolaMateri";
 import KelolaKategoriQuiz from "./pages/admin/KelolaKategoriQuiz";
 import KelolaQuiz from "./pages/admin/KelolaQuiz";
 import QuizQuestionsModal from "./pages/admin/QuizQuestionsModal";
+import QuizPlay from "./pages/public/DetailHalaman/Quizplay";
+import QuizResult from "./pages/public/DetailHalaman/QuizResult";
 
 function App() {
   return (
@@ -42,6 +44,8 @@ function App() {
         <Route path="/quiz" element={<Quiz />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/about" element={<About />} />
+        <Route path="/quiz/play/:quizId" element={<QuizPlay />} />
+        <Route path="/quiz/result/:quizId" element={<QuizResult />} />
       </Route>
 
       {/* ===== ADMIN ===== */}
