@@ -16,13 +16,16 @@ import About from "./pages/public/About";
 
 import AdminRoute from "./routes/AdminRoute";
 import Dashboard from "./pages/admin/Dashboard";
+import KelolaKategoriCourse from "./pages/admin/KelolaKategoriCourse";
 import KelolaCourse from "./pages/admin/KelolaCourse";
+import KelolaKategoriMateri from "./pages/admin/KelolaKategoriMateri";
 import KelolaMateri from "./pages/admin/KelolaMateri";
 import KelolaKategoriQuiz from "./pages/admin/KelolaKategoriQuiz";
 import KelolaQuiz from "./pages/admin/KelolaQuiz";
 import QuizQuestionsModal from "./pages/admin/QuizQuestionsModal";
 import QuizPlay from "./pages/public/DetailHalaman/Quizplay";
 import QuizResult from "./pages/public/DetailHalaman/QuizResult";
+
 
 function App() {
   return (
@@ -52,7 +55,9 @@ function App() {
       <Route element={<AdminRoute />}>
       <Route element={<AdminLayout />}>
         <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/course-categories" element={<KelolaKategoriCourse/>} />
         <Route path="/admin/courses" element={<KelolaCourse />} />
+        <Route path="/admin/material-categories" element={<KelolaKategoriMateri />} />
         <Route path="/admin/materials" element={<KelolaMateri />} />
         <Route path="/admin/quiz-categories" element={<KelolaKategoriQuiz />} />
         <Route path="/admin/quizzes" element={<KelolaQuiz />} />

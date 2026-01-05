@@ -8,6 +8,8 @@ export default function QuizResult() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
 
+ console.log("Quiz result raw : ", result)
+
   useEffect(() => {
     quizResultService
       .getMyResults()
@@ -49,7 +51,7 @@ export default function QuizResult() {
 
           <p className="flex items-center gap-2">
             <CheckCircle className="text-green-600" />
-            Jawaban Benar: {result.correct_count}
+            Jawaban Benar: {result.correct_count} / {result.total_questions} 
           </p>
 
           <p className="flex items-center gap-2">
