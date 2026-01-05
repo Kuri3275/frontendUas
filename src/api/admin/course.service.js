@@ -1,14 +1,26 @@
 import api from "../axios";
 
 const courseService = {
-  getCourses: () => api.get("/admin/courses"),
-  getSelect: async () => {
-  const res = await api.get("/admin/courses/select");
-  return res.data.data;
-},
+  getCourses: (params) => api.get("/admin/courses", { params }),
 
-  create: (data) => api.post("/admin/courses", data),
-  update: (id, data) => api.put(`/admin/courses/${id}`, data),
+  getSelect: () => api.get("/admin/courses/select"),
+
+  // Cukup terima formData langsung dari komponen
+  create: async (formData) => {
+    const res = await api.post("/admin/courses", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data;
+  },
+
+  update: async (id, formData) => {
+    // Gunakan _method=PUT di URL atau append ke formData
+    const res = await api.post(`/admin/courses/${id}?_method=PUT`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data;
+  },
+
   delete: (id) => api.delete(`/admin/courses/${id}`),
 };
 
