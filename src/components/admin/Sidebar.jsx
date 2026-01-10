@@ -39,9 +39,9 @@ export default function Sidebar() {
         {/* Content Section */}
         <SectionTitle title="Content Management" />
         <SidebarItem to="/admin/course-categories" label="Course Categories" icon={FileText} />
-        <SidebarItem to="/admin/courses" label="Courses List" icon={BookOpenCheck} />
+        <SidebarItem to="/admin/courses" label="Courses Sub Categories" icon={BookOpenCheck} />
         <SidebarItem to="/admin/material-categories" label="Materi Categories" icon={Folder} />
-        <SidebarItem to="/admin/materials" label="Materials Video" icon={Video} />
+        <SidebarItem to="/admin/materials" label="Detail Materials " icon={Video} />
 
         {/* Assessment Section */}
         <SectionTitle title="Assessment" />

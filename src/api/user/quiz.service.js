@@ -1,15 +1,17 @@
 import api from "../axios";
 
-export default {
-  async getAll() {
-    const res = await api.get("/quiz");
-
-    // Laravel pagination → ambil array-nya
-    return res.data?.data?.data ?? [];
+const quizService = {
+  // Fungsi untuk ambil semua quiz
+  async getAllQuizzes() {
+    const res = await api.get("/quiz"); // Sesuaikan endpoint ( /quiz atau /quizzes )
+    return res; 
   },
 
-  async getById(id) {
+  // Fungsi untuk ambil detail satu quiz
+  async getQuizById(id) {
     const res = await api.get(`/quiz/${id}`);
-    return res.data?.data ?? null;
+    return res;
   }
 };
+
+export default quizService;

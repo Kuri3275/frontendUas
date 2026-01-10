@@ -1,122 +1,135 @@
-import React from "react";
-import { User, BookOpen, Settings, LogOut, Award, Clock } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { User, Mail, Shield, Settings, LogOut, BookOpen, Award, Terminal, Cpu, Activity } from "lucide-react";
 
 export default function Profile() {
-  // Data dummy untuk tampilan
-  const user = {
-    name: "Kang Tahu",
-    email: "kangtahu@example.com",
-    role: "Student",
-    joined: "Desember 2025",
-    avatar: "https://ui-avatars.com/api/?name=Kang+Tahu&background=4f46e5&color=fff",
-  };
+  const [user, setUser] = useState(null);
 
-  const myCourses = [
-    { id: 1, title: "Mastering React for Beginner", progress: 75, instructor: "Yogie" },
-    { id: 2, title: "UI/UX Design with Figma", progress: 30, instructor: "Lordzyy" },
-  ];
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  if (!user) return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#020617]">
+      <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+      <p className="mt-4 text-cyan-500 font-mono text-[10px] tracking-[0.3em]">FETCHING_IDENTITY...</p>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-28 pb-12">
-      <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <div className="bg-[#020617] min-h-screen pt-32 pb-20 px-6 text-slate-300 relative overflow-hidden">
+      {/* Dekorasi Background */}
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-indigo-600/5 blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-cyan-600/5 blur-[120px] pointer-events-none"></div>
+
+      <div className="max-w-4xl mx-auto relative z-10">
         
-        {/* SIDEBAR PROFIL */}
-        <div className="lg:col-span-1 space-y-6">
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 text-center">
-            <img 
-              src={user.avatar} 
-              alt="Avatar" 
-              className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-indigo-50"
-            />
-            <h2 className="text-xl font-bold text-gray-900">{user.name}</h2>
-            <p className="text-gray-500 text-sm mb-4">{user.email}</p>
-            <div className="inline-block px-3 py-1 bg-indigo-100 text-indigo-600 rounded-full text-xs font-bold uppercase tracking-wider">
-              {user.role}
-            </div>
+        {/* MAIN PROFILE CARD */}
+        <div className="bg-white/[0.02] backdrop-blur-3xl border border-white/5 rounded-[3rem] overflow-hidden shadow-2xl">
+          
+          {/* Header Visual - Cyber Gradient */}
+          <div className="h-40 bg-gradient-to-r from-indigo-900 via-slate-900 to-cyan-900 relative overflow-hidden">
+             <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+             <div className="absolute bottom-4 left-8 flex items-center gap-2 text-[10px] font-mono text-cyan-400/50 tracking-widest uppercase">
+                <Terminal size={12} /> System_Registry_Active
+             </div>
           </div>
-
-          <div className="bg-white overflow-hidden rounded-3xl shadow-sm border border-gray-100">
-            <nav className="flex flex-col">
-              {[
-                { icon: User, label: "Detail Profil", active: true },
-                { icon: BookOpen, label: "Kelas Saya", active: false },
-                { icon: Award, label: "Sertifikat", active: false },
-                { icon: Settings, label: "Pengaturan", active: false },
-              ].map((item, index) => (
-                <button 
-                  key={index} 
-                  className={`flex items-center gap-3 px-6 py-4 text-sm font-medium transition-colors ${
-                    item.active ? "bg-indigo-50 text-indigo-600 border-r-4 border-indigo-600" : "text-gray-600 hover:bg-gray-50"
-                  }`}
-                >
-                  <item.icon size={18} />
-                  {item.label}
-                </button>
-              ))}
-              <button className="flex items-center gap-3 px-6 py-4 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors border-t border-gray-100">
-                <LogOut size={18} />
-                Keluar
-              </button>
-            </nav>
-          </div>
-        </div>
-
-        {/* KONTEN UTAMA */}
-        <div className="lg:col-span-3 space-y-8">
-          {/* Welcome Card */}
-          <div className="bg-indigo-600 p-8 rounded-3xl text-white shadow-lg shadow-indigo-200 relative overflow-hidden">
-            <div className="relative z-10">
-              <h1 className="text-2xl font-bold mb-2">Halo, {user.name}! 👋</h1>
-              <p className="text-indigo-100 italic">"Belajar hari ini, jadi ahli besok pagi."</p>
-            </div>
-            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-3xl rounded-full -mr-10 -mt-10"></div>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center"><BookOpen /></div>
-              <div><p className="text-gray-500 text-xs">Kelas Aktif</p><p className="text-xl font-bold">2</p></div>
-            </div>
-            <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-4">
-              <div className="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-2xl flex items-center justify-center"><Clock /></div>
-              <div><p className="text-gray-500 text-xs">Jam Belajar</p><p className="text-xl font-bold">12h</p></div>
-            </div>
-            <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-4">
-              <div className="w-12 h-12 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center"><Award /></div>
-              <div><p className="text-gray-500 text-xs">Sertifikat</p><p className="text-xl font-bold">0</p></div>
-            </div>
-          </div>
-
-          {/* List Kelas yang Diikuti */}
-          <h3 className="text-xl font-bold text-gray-900">Kelas yang Sedang Diikuti</h3>
-          <div className="grid gap-6">
-            {myCourses.map((course) => (
-              <div key={course.id} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 font-bold">IT</div>
-                  <div>
-                    <h4 className="font-bold text-gray-900">{course.title}</h4>
-                    <p className="text-sm text-gray-500">Mentor: {course.instructor}</p>
-                  </div>
+          
+          <div className="px-10 pb-12">
+            <div className="relative -mt-20 mb-10 flex flex-col md:flex-row md:items-end gap-8">
+              {/* Avatar Frame */}
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-tr from-cyan-500 to-indigo-500 rounded-[2.5rem] blur opacity-30 group-hover:opacity-60 transition duration-1000"></div>
+                <div className="relative w-36 h-36 rounded-[2.2rem] bg-[#0F172A] border-4 border-[#020617] flex items-center justify-center text-white shadow-2xl">
+                  <User size={70} className="text-slate-700 group-hover:text-cyan-400 transition-colors" />
                 </div>
-                <div className="flex-1 max-w-xs">
-                  <div className="flex justify-between text-xs mb-1">
-                    <span>Progress Belajar</span>
-                    <span className="font-bold">{course.progress}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 h-2 rounded-full">
-                    <div className="bg-indigo-600 h-2 rounded-full" style={{ width: `${course.progress}%` }}></div>
-                  </div>
+                <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-emerald-500 rounded-2xl border-4 border-[#020617] flex items-center justify-center text-[#020617]">
+                  <Activity size={18} />
                 </div>
-                <button className="bg-gray-900 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-gray-800 transition">
-                  Lanjut Belajar
-                </button>
               </div>
-            ))}
-          </div>
+              
+              <div className="flex-1 space-y-2">
+                <h1 className="text-4xl font-black text-white uppercase tracking-tighter">
+                  {user.name}
+                </h1>
+                <div className="flex items-center gap-4">
+                    <p className="px-3 py-1 bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded-lg font-mono text-[10px] font-bold flex items-center gap-2 tracking-widest">
+                    <Shield size={12} /> {user.role?.toUpperCase() || "STUDENT"}
+                    </p>
+                    <p className="text-slate-600 font-mono text-[10px] tracking-widest uppercase">
+                      UID: {user.id || 'N/A'}-SEC_ALPHA
+                    </p>
+                </div>
+              </div>
 
+              <button className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl text-[10px] font-black tracking-[0.2em] transition-all border border-white/5 flex items-center gap-3 active:scale-95">
+                <Settings size={16} /> EDIT_CORE_DATA
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12">
+              {/* Left Column: Details */}
+              <div className="lg:col-span-2 space-y-4">
+                <div className="group p-8 bg-white/[0.02] hover:bg-white/[0.04] rounded-[2rem] border border-white/5 transition-all">
+                  <p className="text-[10px] text-slate-500 font-mono uppercase mb-4 tracking-widest">Digital_Signature</p>
+                  <div className="flex items-center gap-4 text-white">
+                    <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-slate-400 group-hover:text-cyan-400 transition-colors">
+                      <Mail size={20} />
+                    </div>
+                    <span className="text-lg font-medium">{user.email}</span>
+                  </div>
+                </div>
+
+                <div className="p-8 bg-white/[0.02] rounded-[2rem] border border-white/5 flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] text-slate-500 font-mono uppercase mb-2 tracking-widest">Security_Status</p>
+                    <div className="flex items-center gap-2 text-emerald-400 font-black uppercase text-sm tracking-widest">
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_#10b981]" />
+                      Verified_Identity
+                    </div>
+                  </div>
+                  <Cpu className="text-slate-800" size={40} />
+                </div>
+              </div>
+
+              {/* Right Column: Stats Grid */}
+              <div className="grid grid-cols-1 gap-4">
+                <div className="p-8 bg-indigo-500/5 border border-indigo-500/10 rounded-[2rem] group hover:bg-indigo-500/10 transition-all text-center lg:text-left relative overflow-hidden">
+                  <BookOpen className="text-indigo-500 mb-4 opacity-50 group-hover:scale-110 transition-transform" size={32} />
+                  <p className="text-3xl font-black text-white">12</p>
+                  <p className="text-[9px] text-indigo-400/60 uppercase font-mono tracking-widest">Active_Units</p>
+                </div>
+                <div className="p-8 bg-cyan-500/5 border border-cyan-500/10 rounded-[2rem] group hover:bg-cyan-500/10 transition-all text-center lg:text-left relative overflow-hidden">
+                  <Award className="text-cyan-500 mb-4 opacity-50 group-hover:scale-110 transition-transform" size={32} />
+                  <p className="text-3xl font-black text-white">04</p>
+                  <p className="text-[9px] text-cyan-400/60 uppercase font-mono tracking-widest">Achievements</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
+              <p className="text-[9px] font-mono text-slate-600 tracking-[0.3em] uppercase">
+                System_Access_Level: Priority_User
+              </p>
+              <button 
+                onClick={() => {
+                  localStorage.clear();
+                  window.location.href = "/login";
+                }}
+                className="w-full md:w-auto px-10 py-5 bg-rose-500/5 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-500/20 rounded-2xl font-black text-[10px] transition-all tracking-[0.3em] uppercase flex items-center justify-center gap-3 shadow-xl hover:shadow-rose-500/20"
+              >
+                <LogOut size={18} /> Terminate_Session
+              </button>
+            </div>
+          </div>
         </div>
+
+        {/* Footer info */}
+        <p className="text-center mt-10 text-[9px] font-mono text-slate-700 uppercase tracking-[0.5em]">
+          End_Of_Encrypted_Profile_Data
+        </p>
       </div>
     </div>
   );

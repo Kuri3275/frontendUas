@@ -1,58 +1,32 @@
 @import "tailwindcss";
 
-html,
-body,
-#root {
-  height: 100%;
+
+/* Animasi melayang yang lebih halus */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
 }
 
-
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.animate-float {
+  animation: float 4s ease-in-out infinite;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  
-  min-width: 320px;
-  min-height: 100vh;
-}
-
+/* Tipografi yang lebih "Bold" sesuai Gambar 1 */
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-
-
-
-body {
-  margin: 0;
   font-family: 'Inter', sans-serif;
-  background-color: #f4f7fe;
-  color: #000;
+  letter-spacing: -0.04em;
 }
 
-#root {
-  width: 100%;
+/* Efek Glassmorphism yang lebih pekat (Gambar 2) */
+.backdrop-blur-xl {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+.glow {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.6),
+              0 0 40px rgba(59, 130, 246, 0.4),
+              0 0 60px rgba(59, 130, 246, 0.2);
+}
+* {
+  transition: all 0.3s ease-in-out;
 }
