@@ -1,23 +1,17 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Sun, Moon, LogOut, User, Menu, X } from "lucide-react"; 
 
-export default function Navbar() {
+export default function Navbar({ toggleTheme, isDarkMode }) {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const [open, setOpen] = useState(false);
-  
-  // STATE BARU: Menentukan apakah user sudah scroll atau belum
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 20);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -30,58 +24,86 @@ export default function Navbar() {
 
   return (
     <nav 
-      className={`sticky top-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 w-full z-[100] transition-all duration-500 ${
         scrolled 
-          ? "bg-slate-900/80 backdrop-blur-lg border-b border-white/10 py-3" // Saat di-scroll (Gelap & Blur)
-          : "bg-transparent py-5" // Saat di paling atas (Transparan & Lebih Longgar)
+          ? "bg-[#020617]/70 backdrop-blur-xl border-b border-white/5 py-4 shadow-2xl" 
+          : "bg-transparent py-8"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between">
 
-        {/* LOGO: Putih bersih agar kontras di semua background */}
-        <Link to="/" className="text-2xl font-extrabold tracking-tighter text-white">
-          EXCEL<span className={scrolled ? "text-indigo-400" : "text-indigo-200"}>LEARN</span>
+        {/* LOGO - Mengikuti gaya gambar (font spasi lebar) */}
+        <Link to="/" className="group flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.5)] flex items-center justify-center group-hover:rotate-12 transition-transform">
+             <span className="text-[#020617] font-black text-xl">E</span>
+          </div>
+          <span className={`text-xl font-bold tracking-[0.2em] transition-colors ${
+            isDarkMode ? "text-white" : "text-slate-900"
+          }`}>
+            EXCEL<span className="text-cyan-400">LEARN</span>
+          </span>
         </Link>
 
-        {/* MENU */}
-        <ul className="hidden md:flex items-center gap-8 text-white/90 font-medium text-sm">
-          <li><Link to="/" className="hover:text-white font-sans transition-colors">Home</Link></li>
-          <li><Link to="/Course" className="hover:text-white font-sans transition-colors">Course</Link></li>
-          <li><Link to="/About" className="hover:text-white font-sans transition-colors">Tentang Kami</Link></li>
-          <li><Link to="/Materi" className="hover:text-white font-sans transition-colors">Materi</Link></li>
-          <li><Link to="/Quiz" className="hover:text-white font-sans transition-colors">Quiz</Link></li>
+        {/* MENU - Font kecil, Uppercase, Tracking wide ala gambar */}
+        <ul className={`hidden md:flex items-center gap-10 font-medium text-[10px] uppercase tracking-[0.25em] transition-colors ${
+          isDarkMode ? "text-slate-400" : "text-slate-600"
+        }`}>
+          <li><Link to="/" className="hover:text-cyan-400 transition-colors relative group">Home<span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-cyan-400 transition-all group-hover:w-full"></span></Link></li>
+          <li><Link to="/Course" className="hover:text-cyan-400 transition-colors relative group">Course<span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-cyan-400 transition-all group-hover:w-full"></span></Link></li>
+          <li><Link to="/Materi" className="hover:text-cyan-400 transition-colors relative group">Materi<span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-cyan-400 transition-all group-hover:w-full"></span></Link></li>
+          <li><Link to="/Quiz" className="hover:text-cyan-400 transition-colors relative group">Quiz<span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-cyan-400 transition-all group-hover:w-full"></span></Link></li>
+          <li><Link to="/About" className="hover:text-cyan-400 transition-colors relative group">Tentang<span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-cyan-400 transition-all group-hover:w-full"></span></Link></li>
         </ul>
 
         {/* RIGHT SECTION */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-5">
+          
+          {/* THEME SWITCHER */}
+          <button 
+            onClick={toggleTheme}
+            className={`p-2.5 rounded-full transition-all active:scale-90 border border-white/10 ${
+              isDarkMode ? "bg-white/5 text-cyan-400 hover:bg-white/10" : "bg-slate-100 text-slate-600"
+            }`}
+          >
+            {isDarkMode ? <Sun size={16} strokeWidth={2.5} /> : <Moon size={16} strokeWidth={2.5} />}
+          </button>
+
           {!user ? (
-            <>
-              <Link to="/login">
-                <button className="px-5 py-2 text-sm font-medium text-white hover:bg-white/10 rounded-full transition">
-                  Masuk
-                </button>
+            <div className="flex items-center gap-3">
+              <Link to="/login" className={`text-[10px] font-bold uppercase tracking-widest hidden sm:block ${
+                isDarkMode ? "text-white" : "text-slate-900"
+              }`}>
+                Login
               </Link>
               <Link to="/register">
-                <button className="px-6 py-2 text-sm font-bold bg-white text-indigo-600 hover:bg-indigo-50 rounded-full shadow-lg transition-all active:scale-95">
-                  Daftar
+                <button className="px-6 py-2.5 text-[10px] font-bold bg-white text-slate-950 hover:bg-cyan-400 transition-all rounded-full uppercase tracking-widest shadow-[0_0_20px_rgba(255,255,255,0.1)] active:scale-95">
+                  Join Free
                 </button>
               </Link>
-            </>
+            </div>
           ) : (
-            <div className="relative flex items-center gap-4">
-              {/* AVATAR */}
+            <div className="relative">
+              {/* AVATAR DENGAN GLOW */}
               <div
                 onClick={() => setOpen(!open)}
-                className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center cursor-pointer font-bold text-white border-2 border-white/40 hover:border-white transition-all shadow-md"
+                className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center cursor-pointer font-bold text-white border-2 border-white/20 hover:scale-105 transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)]"
               >
                 {user.name.charAt(0).toUpperCase()}
               </div>
 
-              {/* DROPDOWN */}
+              {/* DROPDOWN GLASSMORPHISM */}
               {open && (
-                <div className="absolute right-0 top-14 w-48 bg-slate-900 border border-white/10 rounded-2xl shadow-2xl py-2 overflow-hidden">
-                  <Link to="/profile" className="block px-4 py-2 text-sm text-slate-300 hover:bg-indigo-600 hover:text-white transition">Profil</Link>
-                  <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-rose-400 hover:bg-rose-600/20 transition">Keluar</button>
+                <div className="absolute right-0 top-14 w-56 bg-[#0a1024]/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl py-3 overflow-hidden animate-in fade-in zoom-in duration-200">
+                  <div className="px-5 py-3 border-b border-white/5">
+                    <p className="text-[9px] text-slate-500 font-mono uppercase tracking-tighter">Account</p>
+                    <p className="text-sm font-bold text-white truncate">{user.name}</p>
+                  </div>
+                  <Link to="/profile" className="flex items-center gap-3 px-5 py-3 text-xs text-slate-300 hover:bg-white/5 hover:text-cyan-400 transition">
+                    <User size={14} /> Profil Saya
+                  </Link>
+                  <button onClick={handleLogout} className="w-full flex items-center gap-3 px-5 py-3 text-xs text-rose-400 hover:bg-rose-500/10 transition text-left">
+                    <LogOut size={14} /> Log Out
+                  </button>
                 </div>
               )}
             </div>

@@ -1,6 +1,9 @@
-import api from "../axios";
+import api from "../axios"; // Ingat titik dua (..) karena axios ada di luar folder user
 
-export default {
-  getQuizQuestions: (quizId) =>
-    api.get(`/quiz/${quizId}/questions`),
+const quizQuestionService = {
+  getQuestions: (quizId) => {
+    return api.get(`/quiz/${quizId}/questions`);
+  }
 };
+
+export default quizQuestionService;

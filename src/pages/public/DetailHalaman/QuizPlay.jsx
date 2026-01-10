@@ -1,231 +1,150 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import quizService from "../../../api/user/quiz.service";
+import toast from "react-hot-toast";
+
 import quizQuestionService from "../../../api/user/quizQuestion.service";
 import quizSubmitService from "../../../api/user/quizSubmit.service";
+
+//import api from "axios";
+
+/*const quizSubmitService = {
+  submitQuiz: (quizId, answers) => {
+    // Sesuaikan endpoint ini dengan rute di Laravel kamu
+    return api.post(`/quiz/${quizId}/submit`, { answers });
+  }
+};*/
+
+
 
 export default function QuizPlay() {
   const { quizId } = useParams();
   const navigate = useNavigate();
 
-  const [quiz, setQuiz] = useState(null);
   const [questions, setQuestions] = useState([]);
-  const [answers, setAnswers] = useState({});
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [quizInfo, setQuizInfo] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState(null);
-  const [timeLeft, setTimeLeft] = useState(0);
-  const timerRef = useRef(null);
+  
+  // 1. STATE UNTUK MENYIMPAN JAWABAN USER
+  // Formatnya: { id_soal: "pilihan" } -> contoh: { 1: "a", 2: "c" }
+  const [answers, setAnswers] = useState({});
 
-  // ================== FETCH QUIZ & QUESTIONS ==================
   useEffect(() => {
-    const fetchQuiz = async () => {
+    const fetchQuestions = async () => {
       try {
         setLoading(true);
-        const quizData = await quizService.getById(quizId);
-
-        if (!quizData) {
-          setError("Quiz tidak ditemukan");
-          return;
+        const res = await quizQuestionService.getQuestions(quizId);
+        if (res.data && res.data.success) {
+          const dataSoal = res.data.data.questions || [];
+          setQuestions(dataSoal);
+          setQuizInfo(res.data.data);
         }
-
-        if (quizData.is_completed) {
-          navigate(`/quiz/result/${quizId}`, { replace: true });
-          return;
-        }
-
-        setQuiz({
-          id: quizData.id,
-          title: quizData.title,
-          time_limit_minutes: quizData.time_limit_minutes || 0,
-        });
-
-        setTimeLeft((quizData.time_limit_minutes || 0) * 60); // convert to seconds
-
-        const questionRes = await quizQuestionService.getQuizQuestions(quizId);
-        const payload = questionRes.data?.data;
-
-        if (!payload?.questions) {
-          setError("Soal quiz tidak tersedia");
-          return;
-        }
-
-        setQuestions(payload.questions);
       } catch (err) {
-        console.error(err);
-        setError("Gagal memuat quiz");
+        toast.error("Gagal mengambil soal");
       } finally {
         setLoading(false);
       }
     };
+    if (quizId) fetchQuestions();
+  }, [quizId]);
 
-    fetchQuiz();
-  }, [quizId, navigate]);
-
-  // ================== TIMER ==================
-  useEffect(() => {
-    if (timeLeft <= 0 || !quiz) return;
-
-    timerRef.current = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timerRef.current);
-          handleSubmit(); // auto submit jika waktu habis
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timerRef.current);
-  }, [timeLeft, quiz]);
-
-  const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
-  };
-
-  // ================== HANDLE ANSWER ==================
-  const handleAnswerChange = (questionId, value) => {
+  // 2. FUNGSI SAAT OPSI DIKLIK
+  const handleOptionClick = (questionId, optionKey) => {
     setAnswers((prev) => ({
       ...prev,
-      [questionId]: value,
+      [questionId]: optionKey, // simpan/update jawaban untuk soal ini
     }));
   };
 
-  // ================== NAVIGATION ==================
-  const nextQuestion = () => {
-    if (!answers[questions[currentIndex].id]) {
-      alert("Silakan pilih jawaban sebelum lanjut!");
-      return;
-    }
-    if (currentIndex < questions.length - 1) setCurrentIndex(currentIndex + 1);
-  };
-
-  const prevQuestion = () => {
-    if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
-  };
-
-  // ================== SUBMIT QUIZ ==================
+  // 3. FUNGSI SUBMIT (Sementara console log dulu)
   const handleSubmit = async () => {
-    if (!window.confirm("Yakin submit quiz?")) return;
+    const totalSoal = questions.length;
+    const jumlahDijawab = Object.keys(answers).length;
 
-    // ✅ Sesuaikan payload sesuai backend: pakai 'answer', bukan 'selected_answer'
-    const payload = {
-      answers: Object.entries(answers).map(([qid, ans]) => ({
-        question_id: Number(qid),
-        answer: ans.toUpperCase(), // wajib sesuai validasi backend
-      })),
-    };
+    if (jumlahDijawab < totalSoal) {
+      return toast.error(`Selesaikan semua soal! (${jumlahDijawab}/${totalSoal})`);
+    }
 
     try {
-      setSubmitting(true);
-      const res = await quizSubmitService.submit(quizId, payload);
+      setLoading(true);
+      
+      // UBAH FORMAT DISINI:
+      // Dari { "1": "a" } menjadi [{ "question_id": 1, "answer": "a" }]
+      const formattedAnswers = Object.entries(answers).map(([id, choice]) => ({
+        question_id: parseInt(id),
+        answer: choice
+      }));
 
-      navigate(`/quiz/result/${quizId}`, {
-        state: res.data.data,
-        replace: true,
-      });
-    } catch (err) {
-      if (err.response?.status === 409) {
-        alert("Quiz ini sudah pernah kamu kerjakan");
-        navigate(`/quiz/result/${quizId}`, { replace: true });
-      } else if (err.response?.status === 422) {
-        alert(err.response.data.message || "Semua soal wajib dijawab");
-      } else {
-        console.error(err);
-        alert("Gagal submit quiz. Silakan coba lagi.");
+      // Kirim format yang sudah benar ke service
+      const response = await quizSubmitService.submitQuiz(quizId, formattedAnswers);
+
+      if (response.data.success) {
+        toast.success("Kuis Berhasil Dikirim!");
+        navigate(`/quiz/result/${quizId}`); 
       }
+    } catch (err) {
+      console.error("Submit Error:", err.response?.data);
+      // Menampilkan pesan error spesifik dari Laravel jika ada
+      const errMsg = err.response?.data?.message || "Gagal mengirim jawaban";
+      toast.error(errMsg);
     } finally {
-      setSubmitting(false);
+      setLoading(false);
     }
   };
-
-
-
-  // ================== RENDER ==================
-  if (loading) return <p className="pt-40 text-center">Loading quiz...</p>;
-  if (error) return <p className="pt-40 text-center text-red-600">{error}</p>;
-
-  const currentQuestion = questions[currentIndex];
-  const totalQuestions = questions.length;
-  const progressPercent = ((currentIndex + 1) / totalQuestions) * 100;
+  if (loading) return <div className="min-h-screen bg-[#0F172A] text-emerald-500 flex items-center justify-center italic">LOADING_SYSTEM...</div>;
 
   return (
-    <div className="max-w-3xl mx-auto pt-32 pb-20 px-6">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold">{quiz.title}</h2>
-        <div className="text-lg font-bold bg-gray-100 px-4 py-2 rounded">
-          {formatTime(timeLeft)}
+    <div className="bg-[#0F172A] min-h-screen p-6 text-slate-200 pt-24">
+      <div className="max-w-3xl mx-auto space-y-6">
+        
+        <div className="border-b border-slate-800 pb-6 mb-8">
+          <h1 className="text-3xl font-bold text-white italic uppercase tracking-tighter">
+            {quizInfo?.title} <span className="text-emerald-500">#{quizId}</span>
+          </h1>
+          <p className="text-slate-500 text-xs mt-2 font-mono">PILIH SALAH SATU JAWABAN TERBAIK</p>
         </div>
-      </div>
 
-      {/* Progress Bar */}
-      <div className="w-full h-2 bg-gray-200 rounded mb-6">
-        <div
-          className="h-2 bg-indigo-600 rounded transition-all"
-          style={{ width: `${progressPercent}%` }}
-        />
-      </div>
+        {questions.map((q, index) => (
+          <div key={q.id} className="bg-[#1E293B] border border-slate-800 rounded-[25px] p-6 shadow-xl">
+            <div className="flex gap-4 mb-6">
+              <span className="flex-none w-8 h-8 bg-emerald-500 text-[#0F172A] rounded-lg flex items-center justify-center font-black">
+                {index + 1}
+              </span>
+              <p className="font-semibold text-lg text-white leading-relaxed">{q.question_text}</p>
+            </div>
 
-      {/* Question */}
-      <div className="mb-10 p-6 bg-white rounded-xl shadow-md">
-        <p className="font-semibold mb-4">
-          {currentIndex + 1}. {currentQuestion.question_text}
-        </p>
-
-        {["a", "b", "c", "d"].map((opt) => (
-          <label
-            key={opt}
-            className={`block mb-2 cursor-pointer px-3 py-2 rounded border ${
-              answers[currentQuestion.id] === opt.toUpperCase()
-                ? "bg-indigo-100 border-indigo-600"
-                : "hover:bg-gray-100"
-            }`}
-          >
-            <input
-              type="radio"
-              name={`q-${currentQuestion.id}`}
-              className="mr-2"
-              checked={answers[currentQuestion.id] === opt.toUpperCase()}
-              onChange={() =>
-                handleAnswerChange(currentQuestion.id, opt.toUpperCase())
-              }
-            />
-            {currentQuestion[`option_${opt}`]}
-          </label>
+            <div className="grid grid-cols-1 gap-3 ml-0 md:ml-12">
+              {["a", "b", "c", "d"].map((optKey) => {
+                const isSelected = answers[q.id] === optKey; // Cek apakah opsi ini dipilih user
+                
+                return (
+                  <button
+                    key={optKey}
+                    onClick={() => handleOptionClick(q.id, optKey)}
+                    className={`w-full text-left p-4 rounded-xl border transition-all flex items-center group ${
+                      isSelected 
+                        ? "bg-emerald-500/20 border-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.1)]" 
+                        : "bg-slate-900/50 border-slate-800 text-slate-400 hover:border-slate-600"
+                    }`}
+                  >
+                    <span className={`w-8 font-bold ${isSelected ? "text-emerald-500" : "text-slate-600"}`}>
+                      {optKey.toUpperCase()}.
+                    </span>
+                    <span>{q[`option_${optKey}`]}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         ))}
-      </div>
 
-      {/* Navigation / Submit */}
-      <div className="flex justify-between">
-        <button
-          onClick={prevQuestion}
-          disabled={currentIndex === 0}
-          className="px-6 py-3 rounded-xl bg-gray-200 hover:bg-gray-300 disabled:opacity-50 font-semibold"
-        >
-          Prev
-        </button>
-
-        {currentIndex < totalQuestions - 1 ? (
-          <button
-            onClick={nextQuestion}
-            className="px-6 py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 font-semibold"
-          >
-            Next
-          </button>
-        ) : (
-          <button
+        <div className="pt-10 pb-20">
+          <button 
             onClick={handleSubmit}
-            disabled={submitting}
-            className="px-6 py-3 rounded-xl bg-green-600 text-white hover:bg-green-700 font-semibold"
+            className="w-full py-5 bg-emerald-600 hover:bg-emerald-500 text-[#0F172A] font-black text-xl rounded-2xl transition-all active:scale-[0.98]"
           >
-            {submitting ? "Mengirim..." : "Submit Quiz"}
+            SUBMIT_AND_FINISH
           </button>
-        )}
+        </div>
       </div>
     </div>
   );

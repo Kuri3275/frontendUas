@@ -1,123 +1,54 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import React from 'react'; 
+import { CheckCircle2 } from "lucide-react"; 
 
-
-export default function Navbar() {
-  const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
-  const [open, setOpen] = useState(false);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
-
+export default function Card({ title, desc, icon: Icon }) {
   return (
-    <nav className="sticky top-0 z-50 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-b border-white/10">
-  <div className="max-w-7xl mx-auto px-10 py-4 flex items-center justify-between ">
+    <div
+      className="
+        group relative 
+        bg-white/[0.03] 
+        backdrop-blur-md
+        border border-white/10
+        rounded-[2rem]
+        p-8
+        transition-all duration-500
+        hover:-translate-y-2
+        hover:bg-white/[0.07]
+        hover:border-cyan-500/50
+        hover:shadow-[0_0_40px_rgba(34,211,238,0.15)]
+        overflow-hidden
+      "
+    >
+      {/* Dekorasi Cahaya Interior (Glow saat Hover) */}
+      <div className="absolute -right-4 -top-4 w-24 h-24 bg-cyan-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      
+      {/* Label Modul (Estetika desain gambar) */}
+      <div className="text-[9px] font-mono text-slate-500 tracking-[0.2em] mb-4 uppercase group-hover:text-cyan-400 transition-colors">
+        Excellearn Module
+      </div>
 
+      {/* Ikon dengan Frame Glass */}
+      <div className="relative w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center mb-6 text-cyan-400 group-hover:scale-110 group-hover:bg-cyan-500 group-hover:text-[#020617] group-hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] transition-all duration-500">
+        {Icon ? <Icon size={24} strokeWidth={1.5} /> : <CheckCircle2 size={24} strokeWidth={1.5} />}
+      </div>
 
-    {/* LOGO */}
-    <h2 className="text-2xl font-bold tracking-wide text-white">
-      <span className="text-indigo-500">Excellearn</span>
-    </h2>
+      {/* Teks */}
+      <div className="relative">
+        <h3 className="text-lg font-bold text-white mb-3 tracking-wide group-hover:text-cyan-300 transition-colors duration-300">
+          {title}
+        </h3>
+        <p className="text-sm text-slate-400 leading-relaxed font-light">
+          {desc}
+        </p>
+      </div>
 
-    {/* MENU */}
-    <ul className="hidden md:flex items-center gap-10 text-gray-300 font-medium">
-      <li>
-        <Link
-          to="/"
-          className="hover:text-white transition relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-indigo-500 hover:after:w-full after:transition-all"
-        >
-          Home
-        </Link>
-      </li>
-      <li>
-        <Link
-          to="/quiz"
-          className="hover:text-white transition relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-indigo-500 hover:after:w-full after:transition-all"
-        >
-          Course
-        </Link>
-      </li>
-      <li>
-        <Link
-          to="/course"
-          className="hover:text-white transition relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-indigo-500 hover:after:w-full after:transition-all"
-        >
-          Materi
-        </Link>
-      </li>
-      <li>
-        <Link
-          to="/Quiz"
-          className="hover:text-white transition relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-indigo-500 hover:after:w-full after:transition-all"
-        >
-          Quizz
-        </Link>
-      </li>
-    </ul>
+      {/* Indikator Sudut (Aksen kecil di desain modern) */}
+      <div className="absolute top-4 right-6 opacity-20 group-hover:opacity-100 transition-opacity">
+        <div className="w-1 h-1 bg-cyan-400 rounded-full shadow-[0_0_5px_cyan]"></div>
+      </div>
 
-    {/* RIGHT */}
-    <div className="flex items-center gap-4">
-      {!user && (
-        <>
-          <Link to="/login">
-            <button className="px-5 py-2 rounded-lg text-indigo-300 hover:text-white hover:bg-indigo">
-              Login
-            </button>
-          </Link>
-
-          <Link to="/register">
-            <button className="px-5 py-2 rounded-lg text-indigo-300 hover:text-black hover:bg-white/10 transition">
-              Register
-            </button>
-          </Link>
-        </>
-      )}
-
-      {user && (
-        <div className="relative flex items-center gap-4">
-
-          {user.role === "admin" && (
-            <Link to="/admin">
-              <button className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 transition text-sm font-semibold">
-                Admin Panel
-              </button>
-            </Link>
-          )}
-
-          {/* AVATAR */}
-          <div
-            onClick={() => setOpen(!open)}
-            className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center cursor-pointer font-bold text-white hover:ring-2 hover:ring-indigo-400 transition"
-          >
-            {user.name.charAt(0).toUpperCase()}
-          </div>
-
-          {/* DROPDOWN */}
-          {open && (
-            <div className="absolute right-0 top-14 w-44 bg-slate-900 border border-white/10 rounded-xl shadow-xl overflow-hidden">
-              <Link
-                to="/profile"
-                className="block px-4 py-3 hover:bg-white/10 transition"
-              >
-                Profile
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="w-full text-left px-4 py-3 hover:bg-red-600/20 text-red-400 transition"
-              >
-                Logout
-              </button>
-            </div>
-          )}
-        </div>
-      )}
+      {/* Garis Progress Bawah (Cyan Neon) */}
+      <div className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent transition-all duration-700 w-0 group-hover:w-full" />
     </div>
-  </div>
-</nav>
-
   );
 }
